@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talaba Faylini Qo‘shish</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="form-title">Talaba Faylini Qo‘shish</h1>
+        <form method="POST" enctype="multipart/form-data" id="upload-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="student_file" class="form-label">Faylni tanlang:</label>
+                {{ form.student_file }}
+                <p id="error-message" class="text-red-600"></p>
+            </div>
+            <button type="submit" class="submit-btn">Yuborish</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("upload-form").addEventListener("submit", function(event) {
+            const fileInput = document.getElementById("id_student_file");
+            const errorMessage = document.getElementById("error-message");
+
+            // Faylni olish
+            const file = fileInput.files[0];
+
+            // Agar fayl tanlanmagan bo'lsa
+            if (!file) {
+                errorMessage.textContent = "Faylni tanlang!";
+                event.preventDefault(); // Formani yuborilishini to'xtatadi
+                return;
+            }
+
+            // Fayl formati tekshiruvi (faqat PDF)
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            if (fileExtension !== 'pdf') {
+                errorMessage.textContent = "Iltimos, PDF formatidagi faylni yuklang!";
+                event.preventDefault(); // Formani yuborilishini to'xtatadi
+            } else {
+                errorMessage.textContent = ""; // Xato xabarini tozalash
+            }
+        });
+    </script>
+</body>
+</html>

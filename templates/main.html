@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/css.css' %}">
+    <title>Enter code</title>
+</head>
+<body>
+    <div id="main" class="flex justify-center items-center min-h-screen bg-gray-100">
+        <div class="bg-white shadow-lg rounded-lg px-10 py-8 mb-4 w-full max-w-md">
+            <form id="code-form" class="flex flex-col space-y-6" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label class="block text-gray-800 text-lg font-semibold relative">
+                    <span class="mb-3 flex justify-center text-xl font-bold text-gray-900">
+                        Код подтверждения
+                    </span>
+                    <input
+                        class="shadow-md border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-900 leading-tight
+                        focus:outline-none focus:ring-2 focus:ring-blue-500 text-2xl text-center transition-all duration-200"
+                        type="number" placeholder="Введите код" id="code" maxlength="4" name="code">
+                </label>
+
+                <p id="error-message" class="text-red-600 text-center"></p>
+
+                <button
+                    type="button"
+                    id="submit-btn"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg
+                    focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg transition-all duration-200">
+                    Подтвердить
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("submit-btn").addEventListener("click", function() {
+            const code = document.getElementById("code").value;
+            const errorMessage = document.getElementById("error-message");
+
+            // O'g'ri kodni kiritsak
+            if (code === "") {
+                errorMessage.textContent = "Iltimos, kodni kiriting!";
+                return;
+            }
+
+            // AJAX so'rovini yuborish
+            fetch("{% url 'enter_code' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value // CSRF token
+                },
+                body: `code=${code}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    // Agar fayl topilsa, uni ko'rsatish
+                    window.open(data.file_url, '_blank');
+                } else {
+                    // Xato xabari ko'rsatish
+                    errorMessage.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                errorMessage.textContent = "Неверный код.";
+            });
+        });
+    </script>
+</body>
+</html>

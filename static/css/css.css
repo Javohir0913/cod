@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #000;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #bd748e, #4159a5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#main {
+    background: linear-gradient(to right, #7496bd, #3c383c);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 75px;  /* Padding kattalashtirildi */
+    border-radius: 15px;
+    width: 70%; /* Ekranning 70% qismini egallaydi */
+    max-width: 600px; /* Katta ekranda maksimal kenglik */
+    min-height: 300px; /* Minimum balandlik qo‘shildi */
+}
