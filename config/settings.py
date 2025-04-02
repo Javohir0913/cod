@@ -115,21 +115,18 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
-STATIC_URL = 'static/'
-
-if DEBUG is False:
-    STATIC_ROOT = 'static'
-
+# Static fayllar
+STATIC_URL = "static/"  # Static fayllar URL'si
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-    BASE_DIR / 'media',
+    BASE_DIR / "static",  # Loyiha ichidagi static papkani aniqlash
+    BASE_DIR / "media"
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Media fayllar
+MEDIA_URL = '/media/'  # Media fayllar uchun URL
+MEDIA_ROOT = BASE_DIR / 'media'  # Media fayllar saqlash uchun katalog
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -9,8 +9,9 @@
     <title>Enter code</title>
 </head>
 <body>
-    <div id="main" class="flex justify-center items-center min-h-screen bg-gray-100">
-        <div class="bg-white shadow-lg rounded-lg px-10 py-8 mb-4 w-full max-w-md">
+    <div id="main" class="flex justify-center items-center min-h-screen">
+        <div class="shadow-lg rounded-lg px-8 py-6 mb-4 w-full max-w-md">
+            <img src="https://uznature.uz/uploads/global/gerb.png" alt="img">
             <form id="code-form" class="flex flex-col space-y-6" enctype="multipart/form-data">
                 {% csrf_token %}
                 <label class="block text-gray-800 text-lg font-semibold relative">
@@ -41,28 +42,24 @@
             const code = document.getElementById("code").value;
             const errorMessage = document.getElementById("error-message");
 
-            // O'g'ri kodni kiritsak
             if (code === "") {
                 errorMessage.textContent = "Iltimos, kodni kiriting!";
                 return;
             }
 
-            // AJAX so'rovini yuborish
             fetch("{% url 'enter_code' %}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value // CSRF token
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
                 },
                 body: `code=${code}`
             })
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
-                    // Agar fayl topilsa, uni ko'rsatish
                     window.open(data.file_url, '_blank');
                 } else {
-                    // Xato xabari ko'rsatish
                     errorMessage.textContent = data.message;
                 }
             })

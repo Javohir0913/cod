@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(to right, #bd748e, #4159a5);
+    background-color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,12 +15,27 @@ body {
 }
 
 #main {
-    background: linear-gradient(to right, #7496bd, #3c383c);
+    background-color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    padding: 75px;  /* Padding kattalashtirildi */
+    padding: 40px; /* Reduced padding for mobile */
     border-radius: 15px;
-    width: 70%; /* Ekranning 70% qismini egallaydi */
-    max-width: 600px; /* Katta ekranda maksimal kenglik */
-    min-height: 300px; /* Minimum balandlik qo‘shildi */
+    width: 90%; /* 90% of screen width on mobile */
+    max-width: 600px; /* Max width for larger screens */
+    min-height: 300px; /* Minimum height */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #main {
+        padding: 20px; /* More padding for smaller screens */
+    }
+
+    input[type="number"] {
+        font-size: 1.5rem; /* Slightly smaller font size for mobile */
+    }
+
+    button {
+        font-size: 1.2rem; /* Make button text smaller on mobile */
+    }
 }
