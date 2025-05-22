@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Код подтверждения</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/css.css' %}">
-    <title>Enter code</title>
 </head>
-<body>
-    <div id="main" class="flex justify-center items-center min-h-screen">
-        <div class="shadow-lg rounded-lg px-8 py-6 mb-4 w-full max-w-md">
-            <img src="https://uznature.uz/uploads/global/gerb.png" alt="img">
-            <form id="code-form" class="flex flex-col space-y-6" enctype="multipart/form-data">
+<body class="bg-white-100">
+    <div class="flex justify-center items-center min-h-screen px-4">
+        <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+            <div class="flex items-center justify-start mb-16">
+                <img src="https://uznature.uz/uploads/global/gerb.png" alt="Gerb" class="w-24 h-18 mr-4">
+                <h2 class="text-lg text-gray-800 leading-snug w-full">
+                    Министерство здравоохранения<br>Республики Узбекистан
+                </h2>
+            </div>
+
+            <form id="code-form" method="post" class="mt-6 space-y-5">
                 {% csrf_token %}
-                <label class="block text-gray-800 text-lg font-semibold relative">
-                    <span class="mb-3 flex justify-center text-xl font-bold text-gray-900">
-                        Код подтверждения
-                    </span>
-                    <input
-                        class="shadow-md border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-900 leading-tight
-                        focus:outline-none focus:ring-2 focus:ring-blue-500 text-2xl text-center transition-all duration-200"
-                        type="number" placeholder="Введите код" id="code" maxlength="4" name="code">
-                </label>
+                <div>
+                    <label for="code" class="block text-gray-700 font-semibold mb-1">Код подтверждения</label>
+                    <input type="text"
+                        id="code"
+                        name="code"
+                        placeholder="Введите код"
+                        maxlength="4"
+                        class="w-full border border-gray-300 rounded-md px-4 py-2 text-center text-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
 
-                <p id="error-message" class="text-red-600 text-center"></p>
+                <p id="error-message" class="text-red-600 text-sm"></p>
 
-                <button
-                    type="button"
-                    id="submit-btn"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg
-                    focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg transition-all duration-200">
+                <button type="submit"
+                        id="submit-btn"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-md transition duration-200">
                     Подтвердить
                 </button>
             </form>
@@ -38,7 +42,9 @@
     </div>
 
     <script>
-        document.getElementById("submit-btn").addEventListener("click", function() {
+        document.getElementById("code-form").addEventListener("submit", function (e) {
+            e.preventDefault(); // Sahifa yangilanishini to'xtatadi
+
             const code = document.getElementById("code").value;
             const errorMessage = document.getElementById("error-message");
 
@@ -53,14 +59,17 @@
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
                 },
-                body: `code=${code}`
+                body: `code=${encodeURIComponent(code)}`
             })
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
-                    window.open(data.file_url, '_blank');
+                    window.open(data.file_url, '_blank'); // eski
+
+                    // Yangi: ko‘rish sahifasiga yo‘naltirish
+                    // window.location.href = `/pdf_page/${code}/`;
                 } else {
-                    errorMessage.textContent = data.message;
+                    errorMessage.textContent = data.message || "Xatolik yuz berdi.";
                 }
             })
             .catch(error => {

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF ko‘rish</title>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
+    <h1 class="text-2xl font-bold mb-4">Faylni ko‘rib chiqing</h1>
+
+    <iframe src="{{ file_url }}" width="80%" height="600px" class="border"></iframe>
+
+    <a href="{{ file_url }}" download
+       class="mt-4 inline-block bg-blue-600 text-white font-bold px-6 py-2 rounded hover:bg-blue-700">
+        Yuklab olish
+    </a>
+</body>
+</html>

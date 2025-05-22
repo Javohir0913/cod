@@ -5,6 +5,7 @@ from django.views.generic import CreateView
 from django.http import JsonResponse
 from django.shortcuts import render
 import os
+from django.http import FileResponse, Http404
 
 from .models import StudentInfo
 
@@ -67,3 +68,24 @@ def enter_code(request):
             })
 
     return render(request, 'enter_code.html')
+
+def view_pdf(request, code):
+    try:
+        student_info = StudentInfo.objects.get(file_id=code)
+        file_path = student_info.student_file.path
+        if os.path.exists(file_path):
+            return FileResponse(open(file_path, 'rb'), content_type='application/pdf')
+        else:
+            raise Http404("Fayl topilmadi.")
+    except StudentInfo.DoesNotExist:
+        raise Http404("Kod noto‘g‘ri.")
+
+
+def pdf_page(request, code):
+    try:
+        student_info = StudentInfo.objects.get(file_id=code)
+        file_url = student_info.student_file.url
+        return render(request, 'pdf_view.html', {'file_url': file_url, 'code': code})
+    except StudentInfo.DoesNotExist:
+        raise Http404("Kod noto‘g‘ri.")
+
